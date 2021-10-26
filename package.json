@@ -1,0 +1,29 @@
+{
+  "name": "nextjs",
+  "version": "5.0.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/cache": "latest",
+    "@emotion/react": "latest",
+    "@emotion/server": "latest",
+    "@emotion/styled": "latest",
+    "@hookform/resolvers": "^2.8.2",
+    "@mui/icons-material": "^5.0.4",
+    "@mui/material": "latest",
+    "axios": "^0.23.0",
+    "clsx": "latest",
+    "next": "latest",
+    "prop-types": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-hook-form": "^7.17.5",
+    "swr": "^1.0.1",
+    "yup": "^0.32.11"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+  }
+}
