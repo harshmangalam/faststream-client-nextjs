@@ -13,6 +13,8 @@ const clientSideEmotionCache = createEmotionCache();
 
 import axios from "axios";
 
+import AuthProvider from "../context/auth";
+
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_BASEURL;
 
 export default function MyApp(props) {
@@ -27,14 +29,16 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Box>
-          <Box component="header">
-            <Navbar />
+        <AuthProvider>
+          <Box>
+            <Box component="header">
+              <Navbar />
+            </Box>
+            <Box component="main">
+              <Component {...pageProps} />
+            </Box>
           </Box>
-          <Box component="main">
-            <Component {...pageProps} />
-          </Box>
-        </Box>
+        </AuthProvider>
       </ThemeProvider>
     </CacheProvider>
   );

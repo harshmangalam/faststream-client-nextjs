@@ -6,7 +6,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
-import Copyright from "../../components/Auth/Copyright"
+import Copyright from "../../components/Auth/Copyright";
 
 import Alert from "@mui/material/Alert";
 import axios from "axios";
@@ -16,12 +16,15 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 
 import { removeAccessToken, storeAccessToken } from "../../utils/token";
+import { useAuthDispatch } from "../../context/auth";
+import { useRouter } from "next/router";
 const schema = yup.object({
   username: yup.string().required().email(),
   password: yup.string().required(),
 });
 
 export default function SignIn() {
+  const dispatch = useAuthDispatch();
   const {
     control,
     handleSubmit,
@@ -29,23 +32,44 @@ export default function SignIn() {
     setError,
   } = useForm({ resolver: yupResolver(schema) });
 
+  const router = useRouter();
+
   const onSubmit = async ({ username, password }) => {
     const data = new FormData();
     data.append("username", username);
     data.append("password", password);
 
     try {
-      const res = await axios.post("/auth/login", data);
-      const { access_token, token_type } = res.data;
+      dispatch({ type: "SET_AUTH_LOADING", payload: true });
+      const loginRes = await axios.post("/auth/login", data);
+      const { access_token, token_type } = loginRes.data;
       // remove previous access token
       removeAccessToken();
       // set acces token in local storage (currying way)
       storeAccessToken(token_type)(access_token);
+
+      // get current user
+
+      const currentUserRes = await axios.get("/auth/me", {
+        headers: {
+          Authorization: `${token_type} ${access_token}`,
+        },
+      });
+
+      // dispatch current user data
+
+      dispatch({ type: "SET_CURRENTUSER", payload: currentUserRes.data });
       // show success toast
+
+      // route to home page
+
+      router.replace("/");
     } catch (error) {
       console.log(error.response.data);
       // set error
       setError("common", { message: error.response.data.detail });
+    } finally {
+      dispatch({ type: "SET_AUTH_LOADING", payload: false });
     }
   };
 

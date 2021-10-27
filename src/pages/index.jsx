@@ -2,6 +2,7 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import VideoCard from "../components/Video/VideoCard";
 
+
 import Grid from "@mui/material/Grid";
 export default function Index({ videos }) {
   return (
